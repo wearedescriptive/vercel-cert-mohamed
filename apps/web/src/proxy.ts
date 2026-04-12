@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  console.log("proxying request to", pathname);
-
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-request-id", crypto.randomUUID());
 

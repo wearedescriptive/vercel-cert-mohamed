@@ -60,19 +60,20 @@ function getBaseUrl(): string {
   return raw.replace(/\/+$/, "");
 }
 
-function getBypassToken(): string {
-  const token = process.env.STORE_API_SECRET?.trim();
-  if (!token) {
-    throw new Error(
-      "STORE_API_SECRET is not set. It is required on every request.",
-    );
-  }
-  return token;
-}
+// function getBypassToken(): string {
+//   const token = process.env.STORE_API_SECRET?.trim();
+//   if (!token) {
+//     throw new Error(
+//       "STORE_API_SECRET is not set. It is required on every request.",
+//     );
+//   }
+//   return token;
+// }
 
 function defaultHeaders(cartToken?: string): HeadersInit {
   const headers: Record<string, string> = {
-    "x-vercel-protection-bypass": getBypassToken(),
+    //"x-vercel-protection-bypass": getBypassToken(),
+    "x-vercel-protection-bypass": "", //apis currently not working with bypass token
   };
   if (cartToken) {
     headers["x-cart-token"] = cartToken;

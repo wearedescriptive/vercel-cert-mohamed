@@ -1,0 +1,21 @@
+/**
+ * Shared design tokens for Tailwind v4 (@theme).
+ * Font stack references next/font variable set on <body> in the app layout.
+ */
+@theme {
+  --color-background: #fafafa;
+  --color-surface: #ffffff;
+  --color-foreground: #171719;
+  --color-muted: #52525b;
+  --color-promo-bg: #171719;
+  --color-promo-fg: #fafafa;
+  --color-hero-bg: #0f0f10;
+  --color-hero-fg: #fafafa;
+  --color-border: #e4e4e7;
+  --color-border-hover: #d4d4d8;
+  --color-zinc-soft: #f4f4f5;
+  --color-hero-subtle: #a1a1aa;
+  --color-skeleton: #e4e4e7;
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
