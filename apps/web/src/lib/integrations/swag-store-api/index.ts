@@ -103,11 +103,47 @@ function isErrorResponse(body: unknown): body is ErrorResponse {
   );
 }
 
+const INTEGRATION_LOG_PREFIX = "[integrations:swag-store-api]";
+
+function sanitizeHeadersForLog(headers: HeadersInit | undefined): unknown {
+  if (!headers) return undefined;
+  const h = new Headers(headers);
+  const out: Record<string, string> = {};
+  h.forEach((value, key) => {
+    const lk = key.toLowerCase();
+    if (lk === "x-vercel-protection-bypass" || lk === "x-cart-token") {
+      out[key] = value ? "[redacted]" : "";
+    } else {
+      out[key] = value;
+    }
+  });
+  return out;
+}
+
+function logIntegrationRequest(url: string, init?: RequestInit): void {
+  console.log(INTEGRATION_LOG_PREFIX, "request", {
+    method: init?.method ?? "GET",
+    url,
+    headers: sanitizeHeadersForLog(init?.headers),
+    body: init?.body ?? undefined,
+  });
+}
+
+function logIntegrationResponse(
+  url: string,
+  status: number,
+  data: unknown,
+): void {
+  console.log(INTEGRATION_LOG_PREFIX, "response", { url, status, data });
+}
+
 async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
   const baseUrl = getBaseUrl();
   const url = `${baseUrl}${path.startsWith("/") ? path : `/${path}`}`;
+  logIntegrationRequest(url, init);
   const res = await fetch(url, init);
   const body = await parseErrorBody(res);
+  logIntegrationResponse(url, res.status, body);
 
   if (!res.ok) {
     let message = res.statusText || `HTTP ${res.status}`;
@@ -202,14 +238,17 @@ export async function addItemToCart(
 export async function createCart(): Promise<CreateCartResult> {
   const baseUrl = getBaseUrl();
   const url = `${baseUrl}/cart/create`;
-  const res = await fetch(url, {
+  const init: RequestInit = {
     method: "POST",
     headers: {
       ...defaultHeaders(),
       "Content-Type": "application/json",
     },
-  });
+  };
+  logIntegrationRequest(url, init);
+  const res = await fetch(url, init);
   const body = await parseErrorBody(res);
+  logIntegrationResponse(url, res.status, body);
 
   if (!res.ok) {
     let message = res.statusText || `HTTP ${res.status}`;

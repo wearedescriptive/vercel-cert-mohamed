@@ -9,9 +9,7 @@ export type HeroWithArtDirectionProps = {
   alt?: string;
 };
 
-function mergeImgStyle(
-  base: CSSProperties | undefined,
-): CSSProperties {
+function mergeImgStyle(base: CSSProperties | undefined): CSSProperties {
   const fromProps =
     base && typeof base === "object" && !Array.isArray(base) ? base : {};
   return {
@@ -28,8 +26,7 @@ export function HeroWithArtDirection({
 }: HeroWithArtDirectionProps) {
   const common = {
     alt,
-    sizes:
-      "(min-width: 1024px) 52vw, (min-width: 640px) 60vw, 100vw" as const,
+    sizes: "(min-width: 1024px) 52vw, (min-width: 640px) 60vw, 100vw" as const,
     src,
   };
 

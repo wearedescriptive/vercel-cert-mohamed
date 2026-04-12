@@ -13,8 +13,8 @@ export function HeroSection() {
             Wear the framework you ship with.
           </h1>
           <p className="mb-7 max-w-lg text-[1.0625rem] leading-[1.55] text-hero-subtle">
-            Premium swag for developers who build with Vercel. From tees to tech gear, represent the
-            tools you love.
+            Premium swag for developers who build with Vercel. From tees to tech
+            gear, represent the tools you love.
           </p>
           <CtaLink href="/search">Browse All Products →</CtaLink>
         </div>

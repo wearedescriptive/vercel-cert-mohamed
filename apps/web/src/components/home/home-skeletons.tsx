@@ -9,12 +9,12 @@ export function PromoBannerSkeleton() {
 
 export function FeaturedProductsSkeleton() {
   return (
-    <div
-      className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:gap-6"
-      aria-hidden
-    >
+    <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:gap-6" aria-hidden>
       {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="aspect-square animate-pulse rounded-lg bg-skeleton" />
+        <div
+          key={i}
+          className="aspect-square animate-pulse rounded-lg bg-skeleton"
+        />
       ))}
     </div>
   );

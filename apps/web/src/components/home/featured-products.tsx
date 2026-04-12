@@ -47,17 +47,7 @@ export async function FeaturedProducts() {
         </p>
       ) : null}
       {products.length === 0 ? (
-        <p className="mt-3 text-sm text-muted">
-          Featured products are unavailable. Check{" "}
-          <code className="rounded bg-zinc-soft px-1 py-0.5 font-mono text-[0.8125rem] text-foreground">
-            STORE_API_URL
-          </code>{" "}
-          and{" "}
-          <code className="rounded bg-zinc-soft px-1 py-0.5 font-mono text-[0.8125rem] text-foreground">
-            STORE_API_SECRET
-          </code>
-          .
-        </p>
+        <p className="mt-3 text-sm text-muted">No featured products found.</p>
       ) : null}
     </>
   );

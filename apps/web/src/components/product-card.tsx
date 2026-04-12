@@ -6,6 +6,8 @@ export type ProductCardProps = {
   name: string;
   imageUrl: string;
   priceLabel: string;
+  /** Set false on dense grids (e.g. live search) to avoid a burst of prefetch GETs when results update. */
+  prefetch?: boolean;
 };
 
 export function ProductCard({
@@ -13,10 +15,12 @@ export function ProductCard({
   name,
   imageUrl,
   priceLabel,
+  prefetch = true,
 }: ProductCardProps) {
   return (
     <Link
       href={href}
+      prefetch={prefetch}
       className="flex flex-col overflow-hidden rounded-lg border border-border bg-surface transition-[border-color,box-shadow] duration-150 ease-out hover:border-border-hover hover:shadow-[0_4px_12px_rgb(0_0_0/0.06)]"
     >
       <div className="relative aspect-square bg-zinc-soft">
