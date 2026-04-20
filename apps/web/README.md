@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/create-next-app).
+# Swag Store — Web
 
-## Getting Started
+The customer-facing storefront for the Vercel Swag Store. A server-rendered e-commerce application built with the Next.js App Router.
 
-First, run the development server:
+## Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
+- **Next.js 16** — App Router, React Server Components, streaming with Suspense
+- **React 19** — `useActionState`, `useTransition`, Server Actions
+- **Tailwind CSS v4** — utility-first styling with custom theme tokens from `@repo/tailwind-config`
+- **`"use cache"` / `cacheLife` / `cacheTag`** — fine-grained server-side caching for product and category data
+- **Server Actions** — cart mutations and search queries execute server-side, hiding API details from the client
+- **Radix UI** — accessible primitives for the Sheet (cart overlay) via `@repo/ui`
+
+## Routes
+
+| Route | Description |
+|-------|-------------|
+| `/` | Home page with a promotional banner and featured products grid |
+| `/search` | Search page with text input, category filter, and paginated product results |
+| `/products/[slug]` | Product detail page with image, pricing, stock indicator, quantity selector, and add-to-cart |
+
+Each route has its own `loading.tsx` skeleton for instant navigation feedback, and product/search data is cached with `"use cache"` for fast repeat visits.
+
+## Key Features
+
+- **Search** — server-action-powered search with debounced auto-search, category filtering, pagination, and URL persistence
+- **Cart** — sliding sheet (right on desktop, bottom on mobile) with session-persisted cart state via `sessionStorage` and server actions
+- **Caching** — categories cached for hours, product listings cached for minutes, individual products cached with per-product tags (`product-{slug}`)
+- **Error Boundaries** — root-level and route-specific `error.tsx` pages with retry actions
+- **Not Found** — custom `not-found.tsx` for missing products
+
+## Running Locally
+
+From this directory:
+
+```sh
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Or from the monorepo root:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```sh
+pnpm --filter web dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load Inter, a custom Google Font.
+The app starts at [http://localhost:3000](http://localhost:3000).
 
-## Learn More
+## Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+Create a `.env.local` file in this directory:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+STORE_API_URL=https://your-swag-store-api.vercel.app/api
+STORE_API_SECRET=your-bypass-token
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Variable | Description |
+|----------|-------------|
+| `STORE_API_URL` | Base URL of the Swag Store API, including the `/api` path |
+| `STORE_API_SECRET` | Vercel Deployment Protection bypass token sent as `x-vercel-protection-bypass` header |
 
-## Deploy on Vercel
+## Build
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```sh
+pnpm build
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The output is written to `.next/`. Run the production server with:
+
+```sh
+pnpm start
+```
