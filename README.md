@@ -20,18 +20,18 @@ swag-store/
 
 ## Apps
 
-| App | Description |
-|-----|-------------|
+| App   | Description                                                                                              |
+| ----- | -------------------------------------------------------------------------------------------------------- |
 | `web` | Next.js 16 storefront using the App Router, React 19, Tailwind CSS v4, Server Actions, and `"use cache"` |
 
 ## Packages
 
-| Package | Description |
-|---------|-------------|
-| `@repo/ui` | Shared React component library (Sheet, Button, etc.) built on Radix UI, clsx, and tailwind-merge |
-| `@repo/tailwind-config` | Shared Tailwind CSS v4 theme (color tokens, typography, animations) consumed via `@import` |
-| `@repo/eslint-config` | Shared ESLint flat configs — `base`, `next-js`, and `react-internal` presets |
-| `@repo/typescript-config` | Shared `tsconfig.json` presets extended by all apps and packages |
+| Package                   | Description                                                                                      |
+| ------------------------- | ------------------------------------------------------------------------------------------------ |
+| `@repo/ui`                | Shared React component library (Sheet, Button, etc.) built on Radix UI, clsx, and tailwind-merge |
+| `@repo/tailwind-config`   | Shared Tailwind CSS v4 theme (color tokens, typography, animations) consumed via `@import`       |
+| `@repo/eslint-config`     | Shared ESLint flat configs — `base`, `next-js`, and `react-internal` presets                     |
+| `@repo/typescript-config` | Shared `tsconfig.json` presets extended by all apps and packages                                 |
 
 ## Prerequisites
 
@@ -125,9 +125,9 @@ Workspace packages are referenced using the `workspace:*` protocol in `package.j
 
 ## Environment Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `STORE_API_URL` | Base URL of the Swag Store API (including `/api` path) | Yes |
-| `STORE_API_SECRET` | Vercel Deployment Protection bypass token (`x-vercel-protection-bypass`) | Yes |
+| Variable           | Description                                                              | Required |
+| ------------------ | ------------------------------------------------------------------------ | -------- |
+| `STORE_API_URL`    | Base URL of the Swag Store API (including `/api` path)                   | Yes      |
+| `STORE_API_SECRET` | Vercel Deployment Protection bypass token (`x-vercel-protection-bypass`) | Yes      |
 
 These are declared as `globalEnv` in `turbo.json` so Turborepo includes them in cache hashing.

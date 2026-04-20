@@ -13,10 +13,10 @@ The customer-facing storefront for the Vercel Swag Store. A server-rendered e-co
 
 ## Routes
 
-| Route | Description |
-|-------|-------------|
-| `/` | Home page with a promotional banner and featured products grid |
-| `/search` | Search page with text input, category filter, and paginated product results |
+| Route              | Description                                                                                  |
+| ------------------ | -------------------------------------------------------------------------------------------- |
+| `/`                | Home page with a promotional banner and featured products grid                               |
+| `/search`          | Search page with text input, category filter, and paginated product results                  |
 | `/products/[slug]` | Product detail page with image, pricing, stock indicator, quantity selector, and add-to-cart |
 
 Each route has its own `loading.tsx` skeleton for instant navigation feedback, and product/search data is cached with `"use cache"` for fast repeat visits.
@@ -54,9 +54,9 @@ STORE_API_URL=https://your-swag-store-api.vercel.app/api
 STORE_API_SECRET=your-bypass-token
 ```
 
-| Variable | Description |
-|----------|-------------|
-| `STORE_API_URL` | Base URL of the Swag Store API, including the `/api` path |
+| Variable           | Description                                                                           |
+| ------------------ | ------------------------------------------------------------------------------------- |
+| `STORE_API_URL`    | Base URL of the Swag Store API, including the `/api` path                             |
 | `STORE_API_SECRET` | Vercel Deployment Protection bypass token sent as `x-vercel-protection-bypass` header |
 
 ## Build
