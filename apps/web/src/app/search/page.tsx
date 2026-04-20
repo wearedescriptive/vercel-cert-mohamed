@@ -64,8 +64,11 @@ function redirectToClampedPage(
   redirect(qs ? `/search?${qs}` : "/search");
 }
 
-export default async function SearchPage({ searchParams }: SearchPageProps) {
-  const sp = await searchParams;
+async function SearchContent({
+  sp,
+}: {
+  sp: Record<string, string | string[] | undefined>;
+}) {
   const q = parseQueryParam(sp.q);
   const page = parsePageParam(sp.page);
 
@@ -93,8 +96,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     name: c.name,
   }));
 
-  const isSearchMode = q.length > 0 || categorySlug.length > 0;
-
   const initialSearchState = {
     q,
     categorySlug,
@@ -104,6 +105,22 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   };
 
   const formKey = `${q}\0${categorySlug}\0${page}`;
+
+  return (
+    <SearchPageForm
+      key={formKey}
+      initialSearchState={initialSearchState}
+      categoryOptions={categoryOptions}
+    />
+  );
+}
+
+export default async function SearchPage({ searchParams }: SearchPageProps) {
+  const sp = await searchParams;
+  const q = parseQueryParam(sp.q);
+  const rawCategory =
+    (Array.isArray(sp.category) ? sp.category[0] : sp.category) ?? "";
+  const isSearchMode = q.length > 0 || rawCategory.length > 0;
 
   return (
     <div className="mx-auto w-full max-w-6xl px-5 pb-16 pt-10">
@@ -117,11 +134,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       </p>
 
       <Suspense fallback={<SearchFormFallback />}>
-        <SearchPageForm
-          key={formKey}
-          initialSearchState={initialSearchState}
-          categoryOptions={categoryOptions}
-        />
+        <SearchContent sp={sp} />
       </Suspense>
     </div>
   );
