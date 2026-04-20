@@ -18,6 +18,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
       title: res.data.name,
       description: res.data.description,
+      openGraph: {
+        title: res.data.name,
+        description: res.data.description,
+        images: res.data.images.map((img) => ({ url: img })),
+      },
     };
   } catch {
     return { title: "Product not found" };

@@ -15,6 +15,12 @@ export const metadata: Metadata = {
   title: "Search",
   description:
     "Search the Vercel Swag Store catalog by name, description, or tags. Filter by category.",
+  openGraph: {
+    title: "Search | Vercel Swag Store",
+    description:
+      "Search the Vercel Swag Store catalog by name, description, or tags. Filter by category.",
+    url: "/search",
+  },
 };
 
 type SearchPageProps = {
