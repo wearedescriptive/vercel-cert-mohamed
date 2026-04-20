@@ -7,6 +7,48 @@
   }
 }
 
+@keyframes sheet-overlay-in {
+  from { opacity: 0; }
+}
+@keyframes sheet-overlay-out {
+  to { opacity: 0; }
+}
+
+@keyframes sheet-slide-in-from-right {
+  from { opacity: 0; transform: translateX(100%); }
+}
+@keyframes sheet-slide-out-to-right {
+  to { opacity: 0; transform: translateX(100%); }
+}
+@keyframes sheet-slide-in-from-left {
+  from { opacity: 0; transform: translateX(-100%); }
+}
+@keyframes sheet-slide-out-to-left {
+  to { opacity: 0; transform: translateX(-100%); }
+}
+@keyframes sheet-slide-in-from-bottom {
+  from { opacity: 0; transform: translateY(100%); }
+}
+@keyframes sheet-slide-out-to-bottom {
+  to { opacity: 0; transform: translateY(100%); }
+}
+@keyframes sheet-slide-in-from-top {
+  from { opacity: 0; transform: translateY(-100%); }
+}
+@keyframes sheet-slide-out-to-top {
+  to { opacity: 0; transform: translateY(-100%); }
+}
+
 @theme {
   --animate-promo-shimmer: promo-shimmer 1.2s ease-in-out infinite;
+  --animate-sheet-overlay-in: sheet-overlay-in 200ms ease-out;
+  --animate-sheet-overlay-out: sheet-overlay-out 150ms ease-in forwards;
+  --animate-sheet-in-right: sheet-slide-in-from-right 200ms ease-out;
+  --animate-sheet-out-right: sheet-slide-out-to-right 150ms ease-in forwards;
+  --animate-sheet-in-left: sheet-slide-in-from-left 200ms ease-out;
+  --animate-sheet-out-left: sheet-slide-out-to-left 150ms ease-in forwards;
+  --animate-sheet-in-bottom: sheet-slide-in-from-bottom 200ms ease-out;
+  --animate-sheet-out-bottom: sheet-slide-out-to-bottom 150ms ease-in forwards;
+  --animate-sheet-in-top: sheet-slide-in-from-top 200ms ease-out;
+  --animate-sheet-out-top: sheet-slide-out-to-top 150ms ease-in forwards;
 }

@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import { Suspense } from "react";
 import { SiteFooter } from "../components/layout/site-footer";
 import { SiteHeader } from "../components/layout/site-header";
+import { CartProvider } from "../components/cart/cart-provider";
+import { CartSheet } from "../components/cart/cart-sheet";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -66,19 +68,22 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <SiteHeader />
-        <main id="main">{children}</main>
-        <Suspense
-          fallback={
-            <footer className="border-t border-border bg-surface px-5 py-6">
-              <p className="mx-auto max-w-6xl text-center text-[0.8125rem] text-muted">
-                © Vercel Swag Store. All rights reserved.
-              </p>
-            </footer>
-          }
-        >
-          <SiteFooter />
-        </Suspense>
+        <CartProvider>
+          <SiteHeader />
+          <main id="main">{children}</main>
+          <Suspense
+            fallback={
+              <footer className="border-t border-border bg-surface px-5 py-6">
+                <p className="mx-auto max-w-6xl text-center text-[0.8125rem] text-muted">
+                  © Vercel Swag Store. All rights reserved.
+                </p>
+              </footer>
+            }
+          >
+            <SiteFooter />
+          </Suspense>
+          <CartSheet />
+        </CartProvider>
       </body>
     </html>
   );

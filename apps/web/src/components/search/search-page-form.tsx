@@ -45,7 +45,6 @@ export function SearchPageForm({
     setCategory(searchState.categorySlug);
   }, [searchState.q, searchState.categorySlug]);
 
-  /** Safety net: if the server adjusts facets (e.g. page clamp), align the address bar. */
   useEffect(() => {
     if (typeof window === "undefined") return;
     const desired = getSearchUrl(

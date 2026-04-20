@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { VercelLogo } from "@repo/ui/vercel-logo";
-import { CartIcon } from "../icons";
+import { CartBadge } from "../cart/cart-badge";
 
 export function SiteHeader() {
   return (
@@ -27,13 +27,7 @@ export function SiteHeader() {
             Search
           </Link>
         </nav>
-        <Link
-          href="/cart"
-          className="flex items-center justify-center rounded-md p-1.5 text-foreground hover:bg-zinc-soft"
-          aria-label="Cart"
-        >
-          <CartIcon size={22} />
-        </Link>
+        <CartBadge />
       </div>
     </header>
   );
