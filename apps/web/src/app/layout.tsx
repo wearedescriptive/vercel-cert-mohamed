@@ -6,6 +6,8 @@ import { SiteHeader } from "../components/layout/site-header";
 import { CartProvider } from "../components/cart/cart-provider";
 import { CartSheet } from "../components/cart/cart-sheet";
 import "./globals.css";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -84,6 +86,8 @@ export default function RootLayout({
           </Suspense>
           <CartSheet />
         </CartProvider>
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
