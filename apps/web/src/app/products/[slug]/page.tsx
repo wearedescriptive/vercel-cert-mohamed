@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import {
-  getProduct,
-  getProductStock,
-} from "../../../lib/integrations/swag-store-api";
+import { getProductStock } from "../../../lib/integrations/swag-store-api";
+import { getCachedProduct } from "../../../lib/search-data";
 import { AddToCartButton } from "../../../components/cart/add-to-cart-button";
 
 type Props = {
@@ -14,7 +12,7 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   try {
-    const res = await getProduct({ id: slug });
+    const res = await getCachedProduct(slug);
     return {
       title: res.data.name,
       description: res.data.description,
@@ -43,7 +41,7 @@ export default async function ProductDetailPage({ params }: Props) {
   let stock;
   try {
     const [productRes, stockRes] = await Promise.all([
-      getProduct({ id: slug }),
+      getCachedProduct(slug),
       getProductStock({ id: slug }),
     ]);
     product = productRes.data;

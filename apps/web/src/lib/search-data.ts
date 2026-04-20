@@ -1,12 +1,17 @@
-import { cacheLife } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 import type {
   Category,
+  GetProductResponse,
   ListProductsParams,
   PaginationMeta,
   Product,
   ProductCategorySlug,
 } from "./integrations/swag-store-api/types";
-import { listCategories, listProducts } from "./integrations/swag-store-api";
+import {
+  getProduct,
+  listCategories,
+  listProducts,
+} from "./integrations/swag-store-api";
 
 export const SEARCH_PAGE_SIZE = 5;
 
@@ -37,6 +42,16 @@ export function parsePageParam(raw: string | string[] | undefined): number {
   const n = Number.parseInt(String(v), 10);
   if (Number.isNaN(n) || n < 1) return 1;
   return n;
+}
+
+export async function getCachedProduct(
+  slug: string,
+): Promise<GetProductResponse> {
+  "use cache";
+  cacheTag(`product-${slug}`);
+  cacheLife("minutes");
+
+  return getProduct({ id: slug });
 }
 
 export async function getCachedCategories(): Promise<Category[]> {
