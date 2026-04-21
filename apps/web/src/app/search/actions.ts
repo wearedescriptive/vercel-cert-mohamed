@@ -44,25 +44,11 @@ export async function runSearch(
     page = 1;
   }
 
-  let { products, pagination } = await getCachedSearchPageData(
+  const { products, pagination } = await getCachedSearchPageData(
     q,
     categorySlug,
     page,
   );
-
-  if (
-    pagination &&
-    pagination.totalPages >= 1 &&
-    page > pagination.totalPages
-  ) {
-    const last = Math.max(1, pagination.totalPages);
-    ({ products, pagination } = await getCachedSearchPageData(
-      q,
-      categorySlug,
-      last,
-    ));
-    page = last;
-  }
 
   return {
     q,
