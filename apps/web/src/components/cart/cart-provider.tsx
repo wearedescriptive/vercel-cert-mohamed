@@ -114,7 +114,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
           const result = await addToCartAction(token, productId, quantity);
           if (result.success) {
             setCart(result.cart);
-            setIsOpen(true);
           } else {
             setError(result.error);
           }

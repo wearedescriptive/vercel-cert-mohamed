@@ -3,6 +3,7 @@
 import {
   createCart,
   getCart,
+  getProductStock,
   addItemToCart,
   updateCartItem,
   removeCartItem,
@@ -48,6 +49,29 @@ export async function addToCartAction(
   quantity: number = 1,
 ): Promise<CartResult> {
   try {
+    const [stockRes, cartRes] = await Promise.all([
+      getProductStock({ id: productId }),
+      getCart({ cartToken }),
+    ]);
+    const stockInfo = stockRes.data;
+    const existingQty =
+      cartRes.data.items.find((i) => i.productId === productId)?.quantity ?? 0;
+    const resultingQty = existingQty + quantity;
+
+    if (!stockInfo.inStock || stockInfo.stock <= 0) {
+      return {
+        success: false,
+        error: "This product is currently out of stock",
+      };
+    }
+    if (resultingQty > stockInfo.stock) {
+      const msg =
+        existingQty > 0
+          ? `Only ${stockInfo.stock} available in stock. You already have ${existingQty} in your cart.`
+          : `Only ${stockInfo.stock} available in stock.`;
+      return { success: false, error: msg };
+    }
+
     const res = await addItemToCart({ cartToken }, { productId, quantity });
     return { success: true, cart: res.data };
   } catch (err) {
@@ -61,6 +85,22 @@ export async function updateCartItemAction(
   quantity: number,
 ): Promise<CartResult> {
   try {
+    const stockRes = await getProductStock({ id: itemId });
+    const stockInfo = stockRes.data;
+
+    if (!stockInfo.inStock || stockInfo.stock <= 0) {
+      return {
+        success: false,
+        error: "This product is currently out of stock",
+      };
+    }
+    if (quantity > stockInfo.stock) {
+      return {
+        success: false,
+        error: `Only ${stockInfo.stock} available in stock.`,
+      };
+    }
+
     const res = await updateCartItem({ itemId, cartToken }, { quantity });
     return { success: true, cart: res.data };
   } catch (err) {

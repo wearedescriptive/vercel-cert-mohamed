@@ -94,10 +94,6 @@ export function SearchPageForm({
     });
   }
 
-  // Reset client-only state without relying on Next.js navigation. Using a
-  // `<Link href="/search">` here would desync the router from our client-side
-  // URL updates (`window.history.replaceState`) and the first click would be a
-  // no-op navigation, leaving the empty state visible until a second click.
   function clearFilters() {
     debouncedSubmit.cancel();
     setDraft("");

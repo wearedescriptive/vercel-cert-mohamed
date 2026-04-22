@@ -38,6 +38,13 @@ function formatCurrency(amount: number, currency: string = "USD"): string {
 function CartItem({ item }: { item: CartItemWithProduct }) {
   const { updateItemQty, removeItem, isPending } = useCart();
   const { product, quantity, lineTotal } = item;
+  const [draftQty, setDraftQty] = useState(quantity);
+
+  useEffect(() => {
+    setDraftQty(quantity);
+  }, [quantity]);
+
+  const dirty = draftQty !== quantity;
   const imageUrl = product.images[0] ?? "/placeholder.png";
 
   return (
@@ -52,12 +59,13 @@ function CartItem({ item }: { item: CartItemWithProduct }) {
         />
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col justify-between">
+      <div className="flex min-w-0 flex-1 flex-col justify-between gap-2">
         <div className="flex items-start justify-between gap-2">
           <p className="truncate text-sm font-medium text-foreground">
             {product.name}
           </p>
           <button
+            type="button"
             onClick={() => removeItem(item.productId)}
             disabled={isPending}
             className="shrink-0 rounded p-0.5 text-muted hover:text-foreground disabled:opacity-50"
@@ -70,18 +78,20 @@ function CartItem({ item }: { item: CartItemWithProduct }) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
             <button
-              onClick={() => updateItemQty(item.productId, quantity - 1)}
-              disabled={isPending || quantity <= 1}
+              type="button"
+              onClick={() => setDraftQty((q) => Math.max(1, q - 1))}
+              disabled={isPending || draftQty <= 1}
               className="inline-flex size-6 items-center justify-center rounded border border-border text-foreground hover:bg-zinc-soft disabled:opacity-40"
               aria-label="Decrease quantity"
             >
               <MinusIcon className="size-3" />
             </button>
             <span className="min-w-[1.5rem] text-center text-sm tabular-nums">
-              {quantity}
+              {draftQty}
             </span>
             <button
-              onClick={() => updateItemQty(item.productId, quantity + 1)}
+              type="button"
+              onClick={() => setDraftQty((q) => q + 1)}
               disabled={isPending}
               className="inline-flex size-6 items-center justify-center rounded border border-border text-foreground hover:bg-zinc-soft disabled:opacity-40"
               aria-label="Increase quantity"
@@ -93,6 +103,17 @@ function CartItem({ item }: { item: CartItemWithProduct }) {
             {formatCurrency(lineTotal, product.currency)}
           </p>
         </div>
+
+        {dirty && (
+          <button
+            type="button"
+            onClick={() => updateItemQty(item.productId, draftQty)}
+            disabled={isPending}
+            className="self-start rounded-md border border-border px-3 py-1 text-xs font-medium text-foreground hover:bg-zinc-soft disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isPending ? "Saving..." : "Save"}
+          </button>
+        )}
       </div>
     </div>
   );
@@ -107,10 +128,16 @@ function EmptyCart() {
 }
 
 export function CartSheet() {
-  const { cart, isOpen, closeCart } = useCart();
+  const { cart, isOpen, closeCart, error, clearError } = useCart();
   const side = useSheetSide();
   const items = cart?.items ?? [];
   const hasItems = items.length > 0;
+
+  useEffect(() => {
+    if (!error) return;
+    const t = setTimeout(clearError, 5000);
+    return () => clearTimeout(t);
+  }, [error, clearError]);
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && closeCart()}>
@@ -141,6 +168,15 @@ export function CartSheet() {
           </div>
         ) : (
           <EmptyCart />
+        )}
+
+        {error && (
+          <div
+            role="alert"
+            className="mx-4 mb-2 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+          >
+            {error}
+          </div>
         )}
 
         {hasItems && (
