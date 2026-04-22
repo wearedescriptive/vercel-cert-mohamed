@@ -40,7 +40,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   }));
 
   const isSearchMode = q.length > 0 || categorySlug.length > 0;
-  const formKey = `${q}\0${categorySlug}\0${page}`;
 
   return (
     <div className="mx-auto w-full max-w-6xl px-5 pb-16 pt-10">
@@ -54,11 +53,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       </p>
 
       <SearchPageForm
-        key={formKey}
         categoryOptions={categoryOptions}
         initialQ={q}
         initialCategorySlug={categorySlug}
-        initialPage={page}
       >
         <Suspense fallback={<SearchResultsSkeleton />}>
           <SearchInitialResults q={q} categorySlug={categorySlug} page={page} />
