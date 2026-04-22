@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import type { ReactNode } from "react";
 import { startTransition, useActionState, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { ProductCard } from "../product-card";
@@ -24,21 +24,45 @@ function replaceSearchUrl(q: string, categorySlug: string, page: number) {
 }
 
 export type SearchPageFormProps = {
-  initialSearchState: SearchActionState;
   categoryOptions: { slug: string; name: string }[];
+  initialQ: string;
+  initialCategorySlug: string;
+  initialPage: number;
+  children: ReactNode;
 };
 
 export function SearchPageForm({
-  initialSearchState,
   categoryOptions,
+  initialQ,
+  initialCategorySlug,
+  initialPage,
+  children,
 }: SearchPageFormProps) {
+  const initialSearchState: SearchActionState = {
+    q: initialQ,
+    categorySlug: initialCategorySlug,
+    page: initialPage,
+    products: [],
+    pagination: null,
+  };
+
   const [searchState, formAction, isPending] = useActionState(
     runSearch,
     initialSearchState,
   );
 
-  const [draft, setDraft] = useState(initialSearchState.q);
-  const [category, setCategory] = useState(initialSearchState.categorySlug);
+  const [draft, setDraft] = useState(initialQ);
+  const [category, setCategory] = useState(initialCategorySlug);
+  const [hasSearched, setHasSearched] = useState(false);
+
+  // A real navigation changes the server-provided params. When that happens,
+  // drop any stale client action state so the server-streamed `children`
+  // becomes the source of truth again.
+  useEffect(() => {
+    setHasSearched(false);
+    setDraft(initialQ);
+    setCategory(initialCategorySlug);
+  }, [initialQ, initialCategorySlug, initialPage]);
 
   useEffect(() => {
     setDraft(searchState.q);
@@ -46,6 +70,7 @@ export function SearchPageForm({
   }, [searchState.q, searchState.categorySlug]);
 
   useEffect(() => {
+    if (!hasSearched) return;
     if (typeof window === "undefined") return;
     const desired = getSearchUrl(
       searchState.q,
@@ -55,14 +80,34 @@ export function SearchPageForm({
     const current = window.location.pathname + window.location.search;
     if (desired === current) return;
     window.history.replaceState({}, "", desired);
-  }, [searchState.q, searchState.categorySlug, searchState.page]);
+  }, [hasSearched, searchState.q, searchState.categorySlug, searchState.page]);
 
   function submitSearch(q: string, cat: string, page: number) {
+    setHasSearched(true);
     replaceSearchUrl(q, cat, page);
     const fd = new FormData();
     fd.set("q", q);
     fd.set("category", cat);
     fd.set("page", String(page));
+    startTransition(() => {
+      formAction(fd);
+    });
+  }
+
+  // Reset client-only state without relying on Next.js navigation. Using a
+  // `<Link href="/search">` here would desync the router from our client-side
+  // URL updates (`window.history.replaceState`) and the first click would be a
+  // no-op navigation, leaving the empty state visible until a second click.
+  function clearFilters() {
+    debouncedSubmit.cancel();
+    setDraft("");
+    setCategory("");
+    setHasSearched(false);
+    replaceSearchUrl("", "", 1);
+    const fd = new FormData();
+    fd.set("q", "");
+    fd.set("category", "");
+    fd.set("page", "1");
     startTransition(() => {
       formAction(fd);
     });
@@ -89,19 +134,20 @@ export function SearchPageForm({
     searchState.q.length > 0 || searchState.categorySlug.length > 0;
   const showEmpty = isSearchMode && searchState.products.length === 0;
 
-  const results = showEmpty ? (
+  const clientResults = showEmpty ? (
     <div className="rounded-lg border border-border bg-surface px-4 py-8 text-center">
       <p className="text-sm font-medium text-foreground">
         No products match your filters.
       </p>
       <p className="mt-2 text-sm text-muted">
         Try different keywords or{" "}
-        <Link
-          href="/search"
-          className="text-foreground underline underline-offset-2"
+        <button
+          type="button"
+          onClick={clearFilters}
+          className="cursor-pointer text-foreground underline underline-offset-2"
         >
           clear filters
-        </Link>
+        </button>
         .
       </p>
     </div>
@@ -183,7 +229,7 @@ export function SearchPageForm({
       </div>
 
       <SearchFormPendingArea pending={isPending}>
-        {results}
+        {hasSearched ? clientResults : children}
       </SearchFormPendingArea>
     </form>
   );
