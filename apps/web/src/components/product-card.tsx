@@ -28,8 +28,7 @@ export function ProductCard({
           src={imageUrl}
           alt={name}
           fill
-          quality={75}
-          sizes="(max-width: 639px) calc(50vw - 0.625rem), min(33.33vw, 360px)"
+          sizes="(max-width: 639px) calc(50vw - 0.625rem), min(33.33vw, 320px)"
           className="object-cover"
         />
       </div>

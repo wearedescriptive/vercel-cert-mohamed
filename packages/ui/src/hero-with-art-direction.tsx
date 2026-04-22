@@ -45,7 +45,7 @@ export function HeroWithArtDirection({
     ...common,
     width: 960,
     height: 720,
-    quality: 78,
+    quality: 85,
   });
 
   const {

@@ -59,6 +59,7 @@ export default async function ProductDetailPage({ params }: Props) {
             alt={product.name}
             fill
             priority
+            quality={85}
             sizes="(max-width: 639px) 100vw, 50vw"
             className="object-cover"
           />
