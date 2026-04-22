@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ProductCard } from "../product-card";
 import { formatUsdFromCents } from "../../lib/format-price";
-import { getCachedSearchPageData } from "../../lib/search-data";
+import { getSearchPageData } from "../../lib/search-data";
 import { SearchPagination } from "./search-pagination";
 
 const PLACEHOLDER_IMAGE = "/logo-vercel.svg";
@@ -32,7 +32,7 @@ export async function SearchInitialResults({
   categorySlug,
   page,
 }: SearchInitialResultsProps) {
-  const { products, pagination } = await getCachedSearchPageData(
+  const { products, pagination } = await getSearchPageData(
     q,
     categorySlug,
     page,

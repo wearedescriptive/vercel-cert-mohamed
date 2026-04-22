@@ -79,14 +79,11 @@ export type SearchPageData = {
  * With a search query and/or category: paginated catalog; `featured=false` is sent to the API.
  * `categorySlug` must already be validated (empty string or a slug from listCategories).
  */
-export async function getCachedSearchPageData(
+export async function getSearchPageData(
   searchQuery: string,
   categorySlug: string,
   page: number,
 ): Promise<SearchPageData> {
-  "use cache";
-  cacheLife("minutes");
-
   const safePage = Math.max(1, Math.floor(page) || 1);
   const params: ListProductsParams = {
     limit: SEARCH_PAGE_SIZE,
