@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getProductStock } from "../../../lib/integrations/swag-store-api";
+import { Suspense } from "react";
+import {
+  ProductStockIndicator,
+  ProductStockIndicatorSkeleton,
+} from "../../../components/product/product-stock-indicator";
 import { getCachedProduct } from "../../../lib/search-data";
-import { AddToCartButton } from "../../../components/cart/add-to-cart-button";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -38,14 +41,9 @@ export default async function ProductDetailPage({ params }: Props) {
   const { slug } = await params;
 
   let product;
-  let stock;
   try {
-    const [productRes, stockRes] = await Promise.all([
-      getCachedProduct(slug),
-      getProductStock({ id: slug }),
-    ]);
+    const productRes = await getCachedProduct(slug);
     product = productRes.data;
-    stock = stockRes.data;
   } catch {
     notFound();
   }
@@ -82,27 +80,9 @@ export default async function ProductDetailPage({ params }: Props) {
 
           <p className="leading-relaxed text-muted">{product.description}</p>
 
-          <div className="flex items-center gap-2 text-sm">
-            {stock.inStock ? (
-              <>
-                <span className="size-2 rounded-full bg-green-500" />
-                <span className="text-muted">
-                  In stock{stock.lowStock ? " — low stock" : ""}
-                </span>
-              </>
-            ) : (
-              <>
-                <span className="size-2 rounded-full bg-red-500" />
-                <span className="text-muted">Out of stock</span>
-              </>
-            )}
-          </div>
-
-          <AddToCartButton
-            productId={product.id}
-            inStock={stock.inStock}
-            stock={stock.stock}
-          />
+          <Suspense fallback={<ProductStockIndicatorSkeleton />}>
+            <ProductStockIndicator slug={slug} productId={product.id} />
+          </Suspense>
         </div>
       </div>
     </div>
