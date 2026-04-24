@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { ErrorCode } from "../components/error/error-code";
 
 export default function RootError({
   error,
@@ -28,9 +29,13 @@ export default function RootError({
           head back to the home page.
         </p>
         {error.digest && (
-          <p className="mb-6 font-mono text-xs text-muted">
-            Reference: {error.digest}
-          </p>
+          <>
+            <p className="mb-3 text-sm text-muted">
+              If this keeps happening, please share the error code below with
+              our support team so we can trace it.
+            </p>
+            <ErrorCode digest={error.digest} />
+          </>
         )}
         <div className="flex items-center justify-center gap-3">
           <button
