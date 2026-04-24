@@ -60,7 +60,7 @@ export default async function ProductDetailPage({ params }: Props) {
             fill
             priority
             quality={85}
-            sizes="(max-width: 639px) 100vw, 50vw"
+            sizes="(max-width: 639px) 100vw, min(50vw, 510px)"
             className="object-cover"
           />
         </div>

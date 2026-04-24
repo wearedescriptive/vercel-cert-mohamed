@@ -46,9 +46,8 @@ export default function HomePage() {
             View all
           </Link>
         </div>
-        <Suspense fallback={<FeaturedProductsSkeleton />}>
-          <FeaturedProducts />
-        </Suspense>
+
+        <FeaturedProducts />
       </section>
     </>
   );
